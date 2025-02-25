@@ -2,61 +2,81 @@
     name: "welcome"
 
     FloatLayout:
-        # Nền gradient tím nhạt
-        canvas.before:
-            Color:
-                rgba: 0.7, 0.6, 0.9, 1  # Tím nhạt trên cùng
-            Rectangle:
-                pos: self.pos
-                size: self.size
-            Color:
-                rgba: 1, 1, 1, 1  # Trắng dưới cùng
-            Rectangle:
-                pos: self.pos
-                size: self.width, self.height / 2
-
-        # Hình minh họa (thay bằng hình ảnh của bạn, ví dụ: "welcome_illustration.png")
+        md_bg_color: 0, 0, 0, 1  # Màu nền trắng
         Image:
-            source: "welcome_illustration.png"  # Thay bằng đường dẫn hình minh họa
-            size_hint: (0.8, 0.6)
-            pos_hint: {"center_x": 0.5, "center_y": 0.7}
-            allow_stretch: True
-            keep_ratio: True
+            source: "anh/logo.png"
+            pos_hint: {"center_x": .5, "center_y": .74}
+            width: min(root.width, root.height) * 4
 
-        # Logo hoặc tiêu đề "SLOPE" (có thể thay bằng Label hoặc Image)
         Label:
-            text: "SLOPE"
-            font_size: "32sp"
-            pos_hint: {"center_x": 0.5, "top": 0.95}
-            bold: True
-            color: 0.7, 0.6, 0.9, 1  # Tím nhạt
-
-        # Tiêu đề
-        Label:
-            text: "Hello !\nBest place to write life stories and share your journey experiences"
-            font_size: "18sp"
-            pos_hint: {"center_x": 0.5, "top": 0.6}
+            id: welcome_text  # Thêm ID này
+            text: "Chào Mừng ! "
+            font_name: "font/Lobster-Regular"
+            font_size: "23sp"
+            pos_hint: {"center_x": .5, "center_y": .63}
             halign: "center"
-            color: 0, 0, 0, 1  # Đen
+            width: min(root.width, root.height) * 4
+            color: rgba(34, 34, 34, 255)
 
-        # Nút LOGIN
+        Label:
+            id: subtitle_text  # Thêm ID này
+            text: "Hãy bắt đầu hành trình cùng chúng tôi"
+            font_name: "font/Roboto"
+            font_size: "13sp"
+            pos_hint: {"center_x": .5, "center_y": .57}
+            halign: "center"
+            width: min(root.width, root.height) * 4
+            color: rgba(127, 127, 127, 255)
+
         Button:
-            text: "LOGIN"
-            size_hint: (0.8, 0.1)
+            id: login_button
+            text: "Đăng Nhập"
+            size_hint: .66, .065
+            font_name: "font/Roboto"
             pos_hint: {"center_x": 0.5, "top": 0.4}
             background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
             background_normal: ""
             color: 1, 1, 1, 1  # Trắng
             border_radius: [20, 20, 20, 20]  # Góc bo tròn
-            on_release: app.root.current = "login"
-
-        # Nút SIGNUP
+            on_release:
+                app.root.transition.direction = "left"
+                app.root.current = "login"
+            canvas.before:
+                Color:
+                    rgb: rgba(52, 0, 231, 225)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
         Button:
-            text: "SIGNUP"
-            size_hint: (0.8, 0.1)
-            pos_hint: {"center_x": 0.5, "top": 0.25}
-            background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            id: signup_button
+            text: "Đăng Ký"
+            size_hint: .66, .065
+            font_name: "font/Roboto"
+            pos_hint: {"center_x": 0.5, "top": 0.3}
+            background_color: 0, 0, 0, 0  # Tím đậm
             background_normal: ""
-            color: 1, 1, 1, 1  # Trắng
+            color: 0.5, 0.4, 0.7, 1
             border_radius: [20, 20, 20, 20]  # Góc bo tròn
-            on_release: app.root.current = "signup"
+            on_release:
+                app.root.transition.direction = "right"
+                app.root.current = "signup"
+            canvas.before:
+                Color:
+                    rgb: rgba(0.3, 0, 0.5, 1)
+                Line:
+                    width: 1.2
+                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+        Button:
+            id: language_button
+            text: "English"
+            size_hint: .66, .065
+            font_name: "font/Roboto"
+            pos_hint: {"center_x": 0.5, "center_y": .2}
+            background_color: 0, 0, 0, 0
+            background_normal: ""
+            color: 0.5, 0.4, 0.7, 1
+            border_radius: [20, 20, 20, 20]  # Góc bo tròn
+            on_release: root.toggle_language()
+

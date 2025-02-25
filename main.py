@@ -1,6 +1,8 @@
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.animation import Animation
 from kivy.lang import Builder
+from kivy.uix.togglebutton import ToggleButton
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
@@ -21,11 +23,33 @@ Builder.load_file("welcome.kv")
 class MainScreen(Screen):
     pass
 
+
 class WelcomeScreen(Screen):
-    pass
+    def toggle_language(self):
+        if not all(k in self.ids for k in
+                   ["welcome_text", "subtitle_text", "language_button", "login_button", "signup_button"]):
+            print("Lỗi: ID không tồn tại!")
+            return
+
+        if self.ids.welcome_text.text == "Chào Mừng ! ":
+            self.ids.welcome_text.text = "Welcome!"
+            self.ids.subtitle_text.text = "Start your journey with us"
+            self.ids.language_button.text = "Tiếng Việt"
+            self.ids.login_button.text = "Login"
+            self.ids.signup_button.text = "Sign Up"
+        else:
+            self.ids.welcome_text.text = "Chào Mừng ! "
+            self.ids.subtitle_text.text = "Hãy bắt đầu hành trình cùng chúng tôi"
+            self.ids.language_button.text = "English"
+            self.ids.login_button.text = "Đăng Nhập"
+            self.ids.signup_button.text = "Đăng Ký"
+
+        # Cập nhật lại bố cục sau khi thay đổi văn bản
+        self.ids.welcome_text.texture_update()
+        self.ids.subtitle_text.texture_update()
 
 class LoginScreen(Screen):
-    popup = None
+
 
     def login(self):
         email = self.ids.email.text
@@ -201,6 +225,8 @@ class MainApp(MDApp):
         anim.bind(on_complete=lambda *_: setattr(self.root, "current", "welcome"))
         anim.start(image1)
         anim.start(image2)
+
+
 
 if __name__ == "__main__":
     MainApp().run()
