@@ -1,0 +1,108 @@
+<LoginScreen>:
+    name: "login"
+
+    FloatLayout:
+        # Nền gradient tím nhạt
+        canvas.before:
+            Color:
+                rgba: 0.7, 0.6, 0.9, 1  # Tím nhạt trên cùng
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 1, 1, 1, 1  # Trắng dưới cùng
+            Rectangle:
+                pos: self.pos
+                size: self.width, self.height / 2
+
+        # Tiêu đề
+        Label:
+            text: "Welcome!\nSign In to continue"
+            font_size: "28sp"
+            pos_hint: {"center_x": 0.5, "top": 0.9}
+            bold: True
+            color: 0, 0, 0, 1  # Đen
+
+        # Ô nhập Email
+        TextInput:
+            id: email
+            hint_text: "amishkr@gmail.com"
+            size_hint: (0.8, 0.1)
+            pos_hint: {"center_x": 0.5, "top": 0.7}
+            background_color: 1, 1, 1, 0.9  # Trắng mờ
+            border_radius: [10, 10, 10, 10]  # Góc bo tròn
+            foreground_color: 0, 0, 0, 1  # Đen
+
+        # Ô nhập Password
+        TextInput:
+            id: password
+            hint_text: "********"
+            password: True
+            size_hint: (0.8, 0.1)
+            pos_hint: {"center_x": 0.5, "top": 0.55}
+            background_color: 1, 1, 1, 0.9  # Trắng mờ
+            border_radius: [10, 10, 10, 10]  # Góc bo tròn
+            foreground_color: 0, 0, 0, 1  # Đen
+
+        # Nút LOGIN
+        Button:
+            text: "LOGIN"
+            size_hint: (0.8, 0.1)
+            pos_hint: {"center_x": 0.5, "top": 0.4}
+            background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            background_normal: ""
+            color: 1, 1, 1, 1  # Trắng
+            border_radius: [20, 20, 20, 20]  # Góc bo tròn
+            on_release: app.login(email.text, password.text)
+
+        # Nút "Forgot Password?"
+        Button:
+            text: "Forgot Password?"
+            size_hint: (0.8, 0.05)
+            pos_hint: {"center_x": 0.5, "top": 0.3}
+            background_color: 1, 1, 1, 0  # Không nền
+            color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            on_release: app.forgot_password()
+
+        # Nút đăng nhập bằng mạng xã hội
+        Label:
+            text: "Social Media Login"
+            font_size: "16sp"
+            pos_hint: {"center_x": 0.5, "top": 0.22}
+            color: 0, 0, 0, 1  # Đen
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: dp(10)
+            pos_hint: {"center_x": 0.5, "top": 0.15}
+            size_hint: (0.8, 0.1)
+
+            Button:
+                text: "Google"
+                size_hint: (1, 1)
+                background_color: 1, 1, 1, 1  # Trắng
+                border_radius: [15, 15, 15, 15]  # Góc bo tròn
+                on_release: app.login_google()
+
+            Button:
+                text: "Facebook"
+                size_hint: (1, 1)
+                background_color: 1, 1, 1, 1  # Trắng
+                border_radius: [15, 15, 15, 15]  # Góc bo tròn
+                on_release: app.login_facebook()
+
+            Button:
+                text: "Apple"
+                size_hint: (1, 1)
+                background_color: 1, 1, 1, 1  # Trắng
+                border_radius: [15, 15, 15, 15]  # Góc bo tròn
+                on_release: app.login_facebook()
+
+        # Nút "Don't have an account? Sign Up"
+        Button:
+            text: "Don't have an account? Sign Up"
+            size_hint: (0.8, 0.05)
+            pos_hint: {"center_x": 0.5, "top": 0.05}
+            background_color: 1, 1, 1, 0  # Không nền
+            color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            on_release: app.goto_signup()

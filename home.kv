@@ -1,0 +1,151 @@
+<HomeScreen>:
+    name: "home"
+
+    FloatLayout:
+        # Nền gradient xanh lam nhạt
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.6, 0.9, 1  # Xanh lam nhạt trên cùng
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 0.7, 0.9, 1, 1  # Xanh nhạt dưới cùng
+            Rectangle:
+                pos: self.pos
+                size: self.width, self.height / 2
+
+        # Nội dung chính trong khung trắng mờ
+        ScrollView:
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True
+                spacing: dp(10)
+                padding: dp(20)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.9  # Trắng mờ
+                    RoundedRectangle:
+                        size: self.size
+                        pos: self.pos
+                        radius: [20,]
+
+                # Tiêu đề "Top 20 today"
+                MDLabel:
+                    text: "Top 20 today"
+                    font_style: "H5"
+                    halign: "left"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1  # Đen để dễ thấy
+                    padding: [dp(10), 0]
+
+                # Nút "View All"
+                MDRaisedButton:
+                    text: "View All"
+                    size_hint_x: None
+                    width: dp(120)
+                    pos_hint: {"right": 1}
+                    md_bg_color: 0, 0.4, 0.8, 0.9  # Xanh đậm nhạt
+                    text_color: 1, 1, 1, 1  # Trắng trên nút
+
+                # Phần danh sách bài viết (Posts)
+                RecycleView:
+                    viewclass: "PostCard"
+                    RecycleBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(10)
+
+        # Bottom Navigation
+        MDBottomNavigation:
+            md_bg_color: 0, 0.4, 0.8, 0.9  # Xanh đậm nhạt
+            MDBottomNavigationItem:
+                name: "home"
+                text: "Home"
+                icon: "home"
+                on_tab_release: app.root.current = "home"
+
+            MDBottomNavigationItem:
+                name: "notifications"
+                text: "Notifications"
+                icon: "heart"
+
+            MDBottomNavigationItem:
+                name: "add"
+                text: "Add Post"
+                icon: "plus-box"
+
+            MDBottomNavigationItem:
+                name: "search"
+                text: "Search"
+                icon: "magnify"
+
+            MDBottomNavigationItem:
+                name: "profile"
+                text: "Profile"
+                icon: "account"
+                on_tab_release: app.root.current = "profile"
+
+<PostCard@MDCard>:
+    size_hint_y: None
+    height: dp(400)
+    orientation: "vertical"
+    padding: dp(10)
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.9  # Trắng mờ cho bài viết
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15,]
+
+    Image:
+        source: "anhjack.jpg"  # Thay bằng anhjack.jpg
+        size_hint_y: None
+        height: dp(250)
+        allow_stretch: True
+        keep_ratio: True
+
+    MDBoxLayout:
+        orientation: "horizontal"
+        spacing: dp(10)
+        padding: [dp(5), 0]
+
+        Image:
+            source: "anhjack.jpg"  # Thay bằng anhjack.jpg
+            size_hint: None, None
+            size: dp(30), dp(30)
+            allow_stretch: True
+            keep_ratio: True
+
+        MDLabel:
+            text: "Mariana Lopez"
+            font_style: "Body1"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1  # Đen để dễ thấy
+
+        MDLabel:
+            text: "38 min ago"
+            font_style: "Caption"
+            theme_text_color: "Custom"
+            text_color: 0.5, 0.5, 0.5, 1  # Xám nhạt
+            halign: "right"
+            size_hint_x: 0.5
+
+    MDBoxLayout:
+        orientation: "horizontal"
+        spacing: dp(10)
+        padding: [dp(5), 0]
+
+        MDLabel:
+            text: "❤️ 239"
+            font_style: "Body1"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1  # Đen
+
+        MDLabel:
+            text: "💬 8"
+            font_style: "Body1"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1  # Đen

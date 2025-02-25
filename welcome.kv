@@ -1,0 +1,62 @@
+<WelcomeScreen>:
+    name: "welcome"
+
+    FloatLayout:
+        # Nền gradient tím nhạt
+        canvas.before:
+            Color:
+                rgba: 0.7, 0.6, 0.9, 1  # Tím nhạt trên cùng
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 1, 1, 1, 1  # Trắng dưới cùng
+            Rectangle:
+                pos: self.pos
+                size: self.width, self.height / 2
+
+        # Hình minh họa (thay bằng hình ảnh của bạn, ví dụ: "welcome_illustration.png")
+        Image:
+            source: "welcome_illustration.png"  # Thay bằng đường dẫn hình minh họa
+            size_hint: (0.8, 0.6)
+            pos_hint: {"center_x": 0.5, "center_y": 0.7}
+            allow_stretch: True
+            keep_ratio: True
+
+        # Logo hoặc tiêu đề "SLOPE" (có thể thay bằng Label hoặc Image)
+        Label:
+            text: "SLOPE"
+            font_size: "32sp"
+            pos_hint: {"center_x": 0.5, "top": 0.95}
+            bold: True
+            color: 0.7, 0.6, 0.9, 1  # Tím nhạt
+
+        # Tiêu đề
+        Label:
+            text: "Hello !\nBest place to write life stories and share your journey experiences"
+            font_size: "18sp"
+            pos_hint: {"center_x": 0.5, "top": 0.6}
+            halign: "center"
+            color: 0, 0, 0, 1  # Đen
+
+        # Nút LOGIN
+        Button:
+            text: "LOGIN"
+            size_hint: (0.8, 0.1)
+            pos_hint: {"center_x": 0.5, "top": 0.4}
+            background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            background_normal: ""
+            color: 1, 1, 1, 1  # Trắng
+            border_radius: [20, 20, 20, 20]  # Góc bo tròn
+            on_release: app.root.current = "login"
+
+        # Nút SIGNUP
+        Button:
+            text: "SIGNUP"
+            size_hint: (0.8, 0.1)
+            pos_hint: {"center_x": 0.5, "top": 0.25}
+            background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
+            background_normal: ""
+            color: 1, 1, 1, 1  # Trắng
+            border_radius: [20, 20, 20, 20]  # Góc bo tròn
+            on_release: app.root.current = "signup"

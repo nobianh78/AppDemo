@@ -1,0 +1,24 @@
+<MainScreen>:
+    name: "main"
+
+    MDFloatLayout:
+        md_bg_color: 0, 0, 0, 1  # Màu nền trắng
+        Image:
+            id: fade_image
+            source: "TAP-removebg-preview.PNG"
+            allow_stretch: True
+            keep_ratio: True  # Giữ nguyên tỉ lệ ảnh
+            size_hint: None, None  # Không dùng tỷ lệ tự động
+            width: min(root.width, root.height) * 4  # Điều chỉnh theo kích thước nhỏ hơn
+            height: self.width * (self.image_ratio)  # Duy trì tỉ lệ gốc
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            opacity: 1 # Ảnh hiện ngay lập tức
+        Image:
+            id: fade_image1
+            source: "TAP-removebg-preview (1).PNG"
+            allow_stretch: True
+            keep_ratio: True  # Giữ nguyên tỉ lệ ảnh
+            size_hint: None, None  # Không dùng tỷ lệ tự động
+            width: min(root.width, root.height) * 4  # Điều chỉnh theo kích thước nhỏ hơn
+            height: self.width * (self.image_ratio)  # Duy trì tỉ lệ gốc
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}

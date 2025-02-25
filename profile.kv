@@ -1,0 +1,175 @@
+<ProfileScreen>:
+    name: "profile"
+
+    FloatLayout:
+        # Nền gradient tím nhạt
+        canvas.before:
+            Color:
+                rgba: 0.7, 0.6, 0.9, 1  # Tím nhạt trên cùng
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 1, 1, 1, 1  # Trắng dưới cùng
+            Rectangle:
+                pos: self.pos
+                size: self.width, self.height / 2
+
+        # Nội dung chính trong khung trắng mờ
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(10)
+            padding: dp(20)
+            size_hint: (0.9, 0.9)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.9  # Trắng mờ
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [20,]
+
+            # Tiêu đề và thông tin chào mừng
+            MDLabel:
+                text: "My Profile"
+                font_style: "H5"
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # Trắng trên nền tím
+                padding: [0, dp(10)]
+
+            MDLabel:
+                text: "Welcome back!"
+                font_style: "Body1"
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.5, 0.5, 0.5, 1  # Xám nhạt
+
+            # Tên người dùng và avatar
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: dp(150)
+
+                MDLabel:
+                    text: "Debra Rosenblatt"
+                    font_style: "H4"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1  # Đen để dễ thấy
+
+                Image:
+                    source: "anhjack.jpg"  # Thay bằng anhjack.jpg
+                    size_hint: None, None
+                    size: dp(80), dp(80)
+                    pos_hint: {"center_x": 0.5}
+                    allow_stretch: True
+                    keep_ratio: True
+
+            # Số liệu (Posts, Followers, Following)
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(20)
+                padding: dp(10)
+                size_hint_y: None
+                height: dp(50)
+                pos_hint: {"center_x": 0.5}
+
+                MDLabel:
+                    text: "76\nPosts"
+                    font_style: "Body1"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1  # Đen
+
+                MDLabel:
+                    text: "293\nFollowers"
+                    font_style: "Body1"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1  # Đen
+
+                MDLabel:
+                    text: "38\nFollowing"
+                    font_style: "Body1"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1  # Đen
+
+            # Tiêu đề "My Posts"
+            MDLabel:
+                text: "My Posts"
+                font_style: "H6"
+                halign: "left"
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1  # Đen
+                padding: [dp(10), 0]
+
+            # Danh sách bài viết (Posts)
+            ScrollView:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    spacing: dp(10)
+                    padding: dp(10)
+
+                    RecycleView:
+                        viewclass: "PostCard"
+                        RecycleBoxLayout:
+                            orientation: "vertical"
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(10)
+
+        # Bottom Navigation
+        MDBottomNavigation:
+            md_bg_color: 0.7, 0.6, 0.9, 0.9  # Tím nhạt
+            MDBottomNavigationItem:
+                name: "home"
+                text: "Home"
+                icon: "home"
+                on_tab_release: app.root.current = "home"
+
+            MDBottomNavigationItem:
+                name: "notifications"
+                text: "Notifications"
+                icon: "heart"
+
+            MDBottomNavigationItem:
+                name: "add"
+                text: "Add Post"
+                icon: "plus-box"
+
+            MDBottomNavigationItem:
+                name: "search"
+                text: "Search"
+                icon: "magnify"
+
+            MDBottomNavigationItem:
+                name: "profile"
+                text: "Profile"
+                icon: "account"
+                on_tab_release: app.root.current = "profile"
+
+<PostCard@MDCard>:
+    size_hint_y: None
+    height: dp(300)
+    orientation: "vertical"
+    padding: dp(10)
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.9  # Trắng mờ cho bài viết
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15,]
+
+    Image:
+        source: "anhjack.jpg"  # Thay bằng anhjack.jpg
+        size_hint_y: None
+        height: dp(200)
+        allow_stretch: True
+        keep_ratio: True
