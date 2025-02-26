@@ -179,18 +179,6 @@ class MainApp(MDApp):
         sm.add_widget(SettingsScreen(name="settings"))
         return sm
 
-    def login(self, email, password):
-        print(f"Logging in with email: {email}, password: {password}")
-
-    def signup(self, username, email, password):
-        print(f"Signing up with username: {username}, email: {email}, password: {password}")
-
-    def login_google(self):
-        print("Logging in with Google")
-
-    def login_facebook(self):
-        print("Logging in with Facebook")
-
     def on_start(self):
         self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
 

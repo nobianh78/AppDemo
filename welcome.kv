@@ -6,7 +6,10 @@
         Image:
             source: "anh/logo.png"
             pos_hint: {"center_x": .5, "center_y": .74}
-            width: min(root.width, root.height) * 4
+            keep_ratio: True  # Giữ nguyên tỉ lệ ảnh
+            size_hint: None, None  # Không dùng tỷ lệ tự động
+            width: min(root.width, root.height) * 0.3  # Điều chỉnh theo kích thước nhỏ hơn
+            height: self.width * (self.image_ratio)  # Duy trì tỉ lệ gốc
 
         Label:
             id: welcome_text  # Thêm ID này
