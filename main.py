@@ -179,8 +179,10 @@ class MainApp(MDApp):
         sm.add_widget(SettingsScreen(name="settings"))
         return sm
 
+   # def on_start(self):
+    #    self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
     def on_start(self):
-        self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
+        self.root.current = "welcome"
 
     def fade_in_image(self):
         """Hiệu ứng xuất hiện mượt mà trước khi nhấp nháy"""
