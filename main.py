@@ -47,10 +47,37 @@ class WelcomeScreen(Screen):
         # Cập nhật lại bố cục sau khi thay đổi văn bản
         self.ids.welcome_text.texture_update()
         self.ids.subtitle_text.texture_update()
-
+from kivy.network.urlrequest import UrlRequest
+from kivymd.uix.dialog import MDDialog
 class LoginScreen(Screen):
+    dialog = None
+    def check_internet(self):
+        """Kiểm tra kết nối Internet trước khi cho phép đăng nhập"""
+        url = "http://www.google.com"  # URL kiểm tra mạng
 
+        def success_callback(req, result):
+            # Nếu có mạng, chuyển sang màn hình khác
+            self.manager.transition.direction = "left"
+            self.manager.current = "home"
 
+        def error_callback(req, error):
+            # Nếu không có mạng, hiển thị thông báo lỗi
+            self.show_no_internet_dialog()
+
+        # Kiểm tra kết nối (timeout 3 giây)
+        UrlRequest(url, on_success=success_callback, on_error=error_callback, timeout=3)
+
+    def show_no_internet_dialog(self):
+        """Hiển thị dialog khi không có kết nối mạng"""
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Lỗi kết nối",
+                text="Không có kết nối Internet. Vui lòng kiểm tra lại WiFi hoặc dữ liệu di động!",
+                buttons=[
+                    MDRaisedButton(text="OK", on_release=lambda x: self.dialog.dismiss())
+                ]
+            )
+        self.dialog.open()
     def login(self):
         email = self.ids.email.text
         password = self.ids.password.text

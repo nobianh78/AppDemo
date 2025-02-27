@@ -16,27 +16,68 @@
             text: "W E L C O M E ! "
             font_name: "font/Sigmar-Regular"
             font_size: "26sp"
-            pos_hint: {"center_x": .51, "center_y": .62}
+            pos_hint: {"center_x": .51, "center_y": .67}
             halign: "center"
             color: rgba(34,34,34,255)
         MDLabel:
             text: "Sign in to countinue"
             font_name: "font/Roboto"
             font_size: "18sp"
-            pos_hint: {"center_x" : .5, "center_y": .55}
+            pos_hint: {"center_x" : .5, "center_y": .6}
             halign: "center"
             color: rgba(135,135,135,255)
-        TextInput:
-            height: "40dp"
-            hint_text: "Email"
-            font_name: "Roboto"
-            pos_hint: {"center_x": .43, "center_y": 0.25}
-            background_color : 1, 1, 1, 0
-            foreground_color: rgba(0, 0, 59, 255)
-            font_size:"14sp"
-            cursor_width: "2sp"
-            multiline: False
         MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0.2}
-                size_hint_y: 0.3
-                md_bg_color: rgba(178, 178, 178, 255)
+            size_hint: .7, 0.7
+            pos_hint: {"center_x": .5, "center_y": .63}
+            TextInput:
+                hint_text: "Email"
+                font_name: "Roboto"
+                size_hint_y: .75
+                pos_hint: {"center_x": .69, "center_y": -.03}
+                background_color: 1, 1, 1, 0
+                foreground_color: rgba(0, 0, 59, 255)
+                cursor_color: rgba(0, 0, 59, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                halign: "left"
+            MDFloatLayout:
+                pos_hint: {"center_x": .5, "center_y": 0.26}
+                size_hint_y: .01
+                size_hint_x: 0.6
+                md_bg_color: rgba(178, 178, 178, 100)
+        MDFloatLayout:
+            size_hint: .7, 0.7
+            pos_hint: {"center_x": .5, "center_y": .68}
+            TextInput:
+                hint_text: "Password"
+                font_name: "Roboto"
+                size_hint_y: .75
+                pos_hint: {"center_x": .69, "center_y": -.2}
+                background_color: 1, 1, 1, 0
+                foreground_color: rgba(0, 0, 59, 255)
+                cursor_color: rgba(0, 0, 59, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                halign: "left"
+                password: True
+            MDFloatLayout:
+                pos_hint: {"center_x": .5, "center_y": .1}
+                size_hint_y: .01
+                size_hint_x: 0.6
+                md_bg_color: rgba(178, 178, 178, 100)
+        Button:
+            text: "LOGIN"
+            size_hint: .21, 0.038
+            pos_hint: {"center_x": .5, "center_y": .3}
+            background_color:0, 0, 0, 0
+            font_name: "font/BPoppins"
+            on_release: root.check_internet()
+            canvas.before:
+                Color:
+                    rgb: rgba(52,0,231,255)
+                RoundedRectangle:
+                    size: self.size[0], self.size[1] + dp(10)  # Thêm padding dưới
+                    pos: self.pos[0], self.pos[1] - dp(5)  # Dịch xuống một chút
+                    radius: [10]
