@@ -251,7 +251,15 @@ class MainApp(MDApp):
         anim.start(image1)
         anim.start(image2)
 
+class MyApp(MDApp):
+    def build(self):
+        return Builder.load_file("home.kv")  # Load file .kv
 
+    def change_tab_color(self, tab):
+        """Hàm đổi màu khi bấm vào tab"""
+        tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
+        tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
+        tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu icon
 
 if __name__ == "__main__":
     MainApp().run()
