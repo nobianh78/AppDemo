@@ -65,6 +65,8 @@ class WelcomeScreen(Screen):
         self.ids.subtitle_text.texture_update()
 from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.dialog import MDDialog
+from database import Database
+
 class LoginScreen(Screen):
     dialog = None
     popup = None
@@ -73,17 +75,21 @@ class LoginScreen(Screen):
         email = self.ids.email.text.strip()
         password = self.ids.password.text.strip()
 
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
+        # Sử dụng class Database để kiểm tra thông tin đăng nhập
+        db = Database()  # Kết nối tới Database
+        cursor = db.cursor
+
         cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
         user = cursor.fetchone()
-        conn.close()
+        db.close()  # Đóng kết nối Database
 
+        # Kiểm tra kết quả trả về
         if not user:
-            self.show_popup("Lỗi", "Sai email hoặc mật khẩu!")
-            return  # Ngăn không cho chuyển màn hình nếu sai thông tin
+            self.show_popup("Lỗi", "Sai email hoặc mật khẩu!")  # Hiển thị lỗi
+            return  # Không chuyển màn hình nếu thông tin sai
 
-        self.manager.current = "home"  # Chỉ chuyển màn hình nếu thông tin đúng
+        # Nếu thông tin đúng, chuyển tới màn hình Home
+        self.manager.current = "home"
 
     def show_popup(self, title, message):
         if not self.dialog:
@@ -99,17 +105,14 @@ class LoginScreen(Screen):
         """Kiểm tra kết nối Internet trước khi cho phép đăng nhập"""
         url = "http://www.google.com"  # URL kiểm tra mạng
 
-        def success_callback(req, result):
-            # Nếu có mạng, chuyển sang màn hình khác
-            self.manager.transition.direction = "left"
-            self.manager.current = "home"
+
 
         def error_callback(req, error):
             # Nếu không có mạng, hiển thị thông báo lỗi
             self.show_no_internet_dialog()
-
+            self.manager.current = "home"
         # Kiểm tra kết nối (timeout 3 giây)
-        UrlRequest(url, on_success=success_callback, on_error=error_callback, timeout=3)
+        UrlRequest(url, on_error=error_callback, timeout=3)
 
     def show_no_internet_dialog(self):
         """Hiển thị dialog khi không có kết nối mạng"""
@@ -136,6 +139,7 @@ class LoginScreen(Screen):
         if self.popup:
             self.popup.dismiss(force=True)
             self.popup = None
+
 
 class SignUpScreen(Screen):
 
