@@ -123,18 +123,6 @@ class LoginScreen(Screen):
             )
         self.dialog.open()
 
-        if result:
-            role = result[0]
-            if role == "admin":
-                self.manager.current = "admin"
-            else:
-                self.manager.current = "home"
-        else:
-            self.show_popup("Error", "Invalid email or password!")
-
-    def forgot_password(self):
-        self.show_popup("Notice", "Please contact admin to reset your password!")
-
     def goto_signup(self):
         self.manager.current = "signup"
 
