@@ -1,109 +1,104 @@
 <SignUpScreen>:
     name: "signup"
 
-    FloatLayout:
-        # Nền gradient tím nhạt
-        canvas.before:
-            Color:
-                rgba: 0.7, 0.6, 0.9, 1  # Tím nhạt trên cùng
-            Rectangle:
-                pos: self.pos
-                size: self.size
-            Color:
-                rgba: 1, 1, 1, 1  # Trắng dưới cùng
-            Rectangle:
-                pos: self.pos
-                size: self.width, self.height / 2
-
-        # Tiêu đề
-        Label:
-            text: "Hi!\nCreate a new account"
-            font_size: "28sp"
-            pos_hint: {"center_x": 0.5, "top": 0.9}
-            bold: True
-            color: 0, 0, 0, 1  # Đen
-
-        # Ô nhập Username
-        TextInput:
-            id: full_name
-            hint_text: "Amish567"
-            size_hint: (0.8, 0.1)
-            pos_hint: {"center_x": 0.5, "top": 0.7}
-            background_color: 1, 1, 1, 0.9  # Trắng mờ
-            border_radius: [10, 10, 10, 10]  # Góc bo tròn
-            foreground_color: 0, 0, 0, 1  # Đen
-
-        # Ô nhập Email
-        TextInput:
-            id: email
-            hint_text: "amishkr@gmail.com"
-            size_hint: (0.8, 0.1)
-            pos_hint: {"center_x": 0.5, "top": 0.55}
-            background_color: 1, 1, 1, 0.9  # Trắng mờ
-            border_radius: [10, 10, 10, 10]  # Góc bo tròn
-            foreground_color: 0, 0, 0, 1  # Đen
-
-        # Ô nhập Password
-        TextInput:
-            id: password
-            hint_text: "********"
-            password: True
-            size_hint: (0.8, 0.1)
-            pos_hint: {"center_x": 0.5, "top": 0.4}
-            background_color: 1, 1, 1, 0.9  # Trắng mờ
-            border_radius: [10, 10, 10, 10]  # Góc bo tròn
-            foreground_color: 0, 0, 0, 1  # Đen
-
-        # Nút SIGN UP
+    MDFloatLayout:
+        tp_bg_color:1, 1, 1, 1,
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26,24,58,255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "welcome"
+        MDLabel:
+            text: "H E L L O ! "
+            font_name: "font/Sigmar-Regular"
+            font_size: "26sp"
+            pos_hint: {"center_x": .51, "center_y": .67}
+            halign: "center"
+            color: rgba(34,34,34,255)
+        MDLabel:
+            text: "Create a new account "
+            font_name: "font/Roboto"
+            font_size: "18sp"
+            pos_hint: {"center_x" : .5, "center_y": .6}
+            halign: "center"
+            color: rgba(135,135,135,255)
+        MDFloatLayout:
+            size_hint: .7, 0.7
+            pos_hint: {"center_x": .5, "center_y": .63}
+            TextInput:
+                hint_text: "Email"
+                font_name: "Roboto"
+                size_hint_y: .75
+                pos_hint: {"center_x": .69, "center_y": -.03}
+                background_color: 1, 1, 1, 0
+                foreground_color: rgba(0, 0, 59, 255)
+                cursor_color: rgba(0, 0, 59, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                halign: "left"
+            MDFloatLayout:
+                pos_hint: {"center_x": .5, "center_y": 0.26}
+                size_hint_y: .01
+                size_hint_x: 0.6
+                md_bg_color: rgba(178, 178, 178, 100)
+        MDFloatLayout:
+            size_hint: .7, 0.7
+            pos_hint: {"center_x": .5, "center_y": .68}
+            TextInput:
+                hint_text: "Password"
+                font_name: "Roboto"
+                size_hint_y: .75
+                pos_hint: {"center_x": .69, "center_y": -.2}
+                background_color: 1, 1, 1, 0
+                foreground_color: rgba(0, 0, 59, 255)
+                cursor_color: rgba(0, 0, 59, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                halign: "left"
+                password: True
+            MDFloatLayout:
+                pos_hint: {"center_x": .5, "center_y": .1}
+                size_hint_y: .01
+                size_hint_x: 0.6
+                md_bg_color: rgba(178, 178, 178, 100)
+        MDFloatLayout:
+            size_hint: .7, 0.7
+            pos_hint: {"center_x": .5, "center_y": .60}
+            TextInput:
+                hint_text: "Re - Password"
+                font_name: "Roboto"
+                size_hint_y: .75
+                pos_hint: {"center_x": .69, "center_y": -.2}
+                background_color: 1, 1, 1, 0
+                foreground_color: rgba(0, 0, 59, 255)
+                cursor_color: rgba(0, 0, 59, 255)
+                font_size: "14sp"
+                cursor_width: "2sp"
+                multiline: False
+                halign: "left"
+                password: True
+            MDFloatLayout:
+                pos_hint: {"center_x": .5, "center_y": .1}
+                size_hint_y: .01
+                size_hint_x: 0.6
+                md_bg_color: rgba(178, 178, 178, 100)
         Button:
-            text: "SIGN UP"
-            size_hint: (0.8, 0.1)
-            pos_hint: {"center_x": 0.5, "top": 0.25}
-            background_color: 0.5, 0.4, 0.7, 1  # Tím đậm
-            background_normal: ""
-            color: 1, 1, 1, 1  # Trắng
-            border_radius: [20, 20, 20, 20]  # Góc bo tròn
-            on_release: app.signup(full_name.text, email.text, password.text)
-
-        # Nút đăng ký bằng mạng xã hội
-        Label:
-            text: "Social Media Sign up"
-            font_size: "16sp"
-            pos_hint: {"center_x": 0.5, "top": 0.17}
-            color: 0, 0, 0, 1  # Đen
-
-        MDBoxLayout:
-            orientation: "horizontal"
-            spacing: dp(10)
-            pos_hint: {"center_x": 0.5, "top": 0.1}
-            size_hint: (0.8, 0.1)
-
-            Button:
-                text: "Google"
-                size_hint: (1, 1)
-                background_color: 1, 1, 1, 1  # Trắng
-                border_radius: [15, 15, 15, 15]  # Góc bo tròn
-                on_release: app.login_google()
-
-            Button:
-                text: "Facebook"
-                size_hint: (1, 1)
-                background_color: 1, 1, 1, 1  # Trắng
-                border_radius: [15, 15, 15, 15]  # Góc bo tròn
-                on_release: app.login_facebook()
-
-            Button:
-                text: "Apple"
-                size_hint: (1, 1)
-                background_color: 1, 1, 1, 1  # Trắng
-                border_radius: [15, 15, 15, 15]  # Góc bo tròn
-                on_release: app.login_facebook()
-
-        # Nút "Already have an account? Sign In"
-        Button:
-            text: "Already have an account? Sign In"
-            size_hint: (0.8, 0.05)
-            pos_hint: {"center_x": 0.5, "top": 0.02}
-            background_color: 1, 1, 1, 0  # Không nền
-            color: 0.5, 0.4, 0.7, 1  # Tím đậm
-            on_release: app.goto_login()
+            text: "LOGIN"
+            size_hint: .21, 0.038
+            pos_hint: {"center_x": .5, "center_y": .2}
+            background_color:0, 0, 0, 0
+            font_name: "font/BPoppins"
+            on_release: root.check_internet()
+            canvas.before:
+                Color:
+                    rgb: rgba(52,0,231,255)
+                RoundedRectangle:
+                    size: self.size[0], self.size[1] + dp(10)  # Thêm padding dưới
+                    pos: self.pos[0], self.pos[1] - dp(5)  # Dịch xuống một chút
+                    radius: [10]

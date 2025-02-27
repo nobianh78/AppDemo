@@ -115,52 +115,7 @@ class LoginScreen(Screen):
             self.popup = None
 
 class SignUpScreen(Screen):
-    popup = None
-
-    def register(self):
-        username = self.ids.full_name.text  # Sử dụng username thay vì full_name cho khớp với thiết kế
-        email = self.ids.email.text
-        password = self.ids.password.text
-
-        if not email or not password or not username:
-            self.show_popup("Error", "Please fill in all fields!")
-            return
-
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT,
-                email TEXT UNIQUE,
-                password TEXT,
-                role TEXT DEFAULT 'user'
-            )
-        """)
-        try:
-            cursor.execute("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'user')", (username, email, password))
-            conn.commit()
-            self.show_popup("Success", "Registration successful!")
-            self.manager.current = "login"
-        except sqlite3.IntegrityError:
-            self.show_popup("Error", "Email already in use!")
-        finally:
-            conn.close()
-
-    def goto_login(self):
-        self.manager.current = "login"
-
-    def show_popup(self, title, message):
-        if not self.popup:
-            close_button = MDFlatButton(text="Close", on_release=self.close_popup)
-            self.popup = MDDialog(title=title, text=message, buttons=[close_button])
-        self.popup.open()
-
-    def close_popup(self, *args):
-        if self.popup:
-            self.popup.dismiss(force=True)
-            self.popup = None
-
+    pass
 class HomeScreen(Screen):
     def add_team_card(self, team_name):
         """Thêm một thẻ đội nhóm vào màn hình với hiệu ứng fade-in."""
