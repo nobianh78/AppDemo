@@ -1,8 +1,8 @@
 <SignUpScreen>:
     name: "signup"
-
     MDFloatLayout:
-        tp_bg_color:1, 1, 1, 1,
+        tp_bg_color: 1, 1, 1, 1,
+
         MDIconButton:
             icon: "arrow-left"
             pos_hint: {"center_y": .95}
@@ -12,6 +12,7 @@
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "welcome"
+
         MDLabel:
             text: "H E L L O ! "
             font_name: "font/Sigmar-Regular"
@@ -19,6 +20,7 @@
             pos_hint: {"center_x": .51, "center_y": .67}
             halign: "center"
             color: rgba(34,34,34,255)
+
         MDLabel:
             text: "Create a new account "
             font_name: "font/Roboto"
@@ -26,10 +28,13 @@
             pos_hint: {"center_x" : .5, "center_y": .6}
             halign: "center"
             color: rgba(135,135,135,255)
+
         MDFloatLayout:
             size_hint: .7, 0.7
             pos_hint: {"center_x": .5, "center_y": .63}
+
             TextInput:
+                id: email
                 hint_text: "Email"
                 font_name: "Roboto"
                 size_hint_y: .75
@@ -41,15 +46,19 @@
                 cursor_width: "2sp"
                 multiline: False
                 halign: "left"
+
             MDFloatLayout:
                 pos_hint: {"center_x": .5, "center_y": 0.26}
                 size_hint_y: .01
                 size_hint_x: 0.6
                 md_bg_color: rgba(178, 178, 178, 100)
+
         MDFloatLayout:
             size_hint: .7, 0.7
             pos_hint: {"center_x": .5, "center_y": .68}
+
             TextInput:
+                id: password
                 hint_text: "Password"
                 font_name: "Roboto"
                 size_hint_y: .75
@@ -62,14 +71,17 @@
                 multiline: False
                 halign: "left"
                 password: True
+
             MDFloatLayout:
                 pos_hint: {"center_x": .5, "center_y": .1}
                 size_hint_y: .01
                 size_hint_x: 0.6
                 md_bg_color: rgba(178, 178, 178, 100)
+
         MDFloatLayout:
             size_hint: .7, 0.7
             pos_hint: {"center_x": .5, "center_y": .60}
+
             TextInput:
                 hint_text: "Re - Password"
                 font_name: "Roboto"
@@ -83,22 +95,34 @@
                 multiline: False
                 halign: "left"
                 password: True
+
             MDFloatLayout:
                 pos_hint: {"center_x": .5, "center_y": .1}
                 size_hint_y: .01
                 size_hint_x: 0.6
                 md_bg_color: rgba(178, 178, 178, 100)
+
         Button:
             text: "LOGIN"
             size_hint: .21, 0.038
             pos_hint: {"center_x": .5, "center_y": .2}
-            background_color:0, 0, 0, 0
+            background_color: 0, 0, 0, 0
             font_name: "font/BPoppins"
-            on_release: root.check_internet()
+            on_release: root.register_user()
             canvas.before:
                 Color:
                     rgb: rgba(52,0,231,255)
                 RoundedRectangle:
-                    size: self.size[0], self.size[1] + dp(10)  # Thêm padding dưới
-                    pos: self.pos[0], self.pos[1] - dp(5)  # Dịch xuống một chút
+                    size: self.size[0], self.size[1] + dp(10)
+                    pos: self.pos[0], self.pos[1] - dp(5)
                     radius: [10]
+
+        # THÊM LABEL HIỂN THỊ LỖI Ở ĐÂY
+        MDLabel:
+            id: error_label
+            text: ""
+            font_name: "Roboto"
+            font_size: "14sp"
+            pos_hint: {"center_x": .5, "center_y": .15}  # Đặt dưới nút LOGIN
+            halign: "center"
+            color: 1, 0, 0, 1  # Màu đỏ để báo lỗi

@@ -8,7 +8,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
+import mysql.connector
 import sqlite3
+import re
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
 
@@ -19,7 +21,21 @@ Builder.load_file("signup.kv")
 Builder.load_file("home.kv")
 Builder.load_file("profile.kv")
 Builder.load_file("welcome.kv")
+import sqlite3
 
+def create_database():
+    #tao mot database va bang uses de luu tru
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        email TEXT UNIQUE NOT NULL,
+                        password TEXT NOT NULL
+                      )''')
+    conn.commit()
+    conn.close()
+
+create_database()
 class MainScreen(Screen):
     pass
 
@@ -51,6 +67,34 @@ from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.dialog import MDDialog
 class LoginScreen(Screen):
     dialog = None
+    popup = None
+
+    def login(self):
+        email = self.ids.email.text.strip()
+        password = self.ids.password.text.strip()
+
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
+        user = cursor.fetchone()
+        conn.close()
+
+        if not user:
+            self.show_popup("Lỗi", "Sai email hoặc mật khẩu!")
+            return  # Ngăn không cho chuyển màn hình nếu sai thông tin
+
+        self.manager.current = "home"  # Chỉ chuyển màn hình nếu thông tin đúng
+
+    def show_popup(self, title, message):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title=title, text=message,
+                buttons=[MDFlatButton(text="OK", on_release=lambda x: self.dialog.dismiss())]
+            )
+        else:
+            self.dialog.text = message  # Cập nhật nội dung nếu dialog đã tồn tại
+
+        self.dialog.open()
     def check_internet(self):
         """Kiểm tra kết nối Internet trước khi cho phép đăng nhập"""
         url = "http://www.google.com"  # URL kiểm tra mạng
@@ -78,15 +122,6 @@ class LoginScreen(Screen):
                 ]
             )
         self.dialog.open()
-    def login(self):
-        email = self.ids.email.text
-        password = self.ids.password.text
-
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT role FROM users WHERE email=? AND password=?", (email, password))
-        result = cursor.fetchone()
-        conn.close()
 
         if result:
             role = result[0]
@@ -115,7 +150,37 @@ class LoginScreen(Screen):
             self.popup = None
 
 class SignUpScreen(Screen):
-    pass
+
+    def register_user(self):
+        email = self.ids.email.text.strip()
+        password = self.ids.password.text.strip()
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            self.ids.error_label.text = "Email không hợp lệ!"
+            return
+        if len(password) < 8:
+            self.ids.error_label.text = "Mật khẩu phải có ít nhất 8 ký tự!"
+            return
+        if not email or not password:
+            self.show_popup("Error", "Please enter all fields!")
+            return
+        self.ids.error_label.text = ""
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, password))
+            conn.commit()
+            self.show_popup("Success", "Account created successfully!")
+            self.manager.current = "login"  # Chuyển sang màn hình đăng nhập
+        except sqlite3.IntegrityError:
+            self.show_popup("Error", "Email already exists!")
+        finally:
+            conn.close()
+
+    def show_popup(self, title, message):
+        dialog = MDDialog(title=title, text=message,
+                          buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())])
+        dialog.open()
 class HomeScreen(Screen):
     def add_team_card(self, team_name):
         """Thêm một thẻ đội nhóm vào màn hình với hiệu ứng fade-in."""

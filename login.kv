@@ -30,6 +30,8 @@
             size_hint: .7, 0.7
             pos_hint: {"center_x": .5, "center_y": .63}
             TextInput:
+                id: email
+                hint_text: "Nhập email"
                 hint_text: "Email"
                 font_name: "Roboto"
                 size_hint_y: .75
@@ -50,6 +52,7 @@
             size_hint: .7, 0.7
             pos_hint: {"center_x": .5, "center_y": .68}
             TextInput:
+                id: password
                 hint_text: "Password"
                 font_name: "Roboto"
                 size_hint_y: .75
@@ -73,7 +76,7 @@
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color:0, 0, 0, 0
             font_name: "font/BPoppins"
-            on_release: root.check_internet()
+            on_release: root.check_internet(), root.login()
             canvas.before:
                 Color:
                     rgb: rgba(52,0,231,255)
