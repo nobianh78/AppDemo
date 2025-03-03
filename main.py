@@ -1,3 +1,5 @@
+from functools import partial
+
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.animation import Animation
@@ -13,6 +15,8 @@ import sqlite3
 import re
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
+from urllib3.util import url
+import requests
 
 # Load các file KV
 Builder.load_file("myapp.kv")
@@ -83,12 +87,14 @@ class LoginScreen(Screen):
         user = cursor.fetchone()
         db.close()  # Đóng kết nối Database
 
-        # Kiểm tra kết quả trả về
         if not user:
             self.show_popup("Lỗi", "Sai email hoặc mật khẩu!")  # Hiển thị lỗi
             return  # Không chuyển màn hình nếu thông tin sai
 
-        # Nếu thông tin đúng, chuyển tới màn hình Home
+        # Kiểm tra kết quả trả về
+        if not self.check_internet():  # Gọi hàm kiểm tra Internet và thông báo lỗi nếu không có mạng
+            self.show_popup("Lỗi", "Không có kết nối mạng! Vui lòng kiểm tra lại.")
+            return
         self.manager.current = "home"
 
     def show_popup(self, title, message):
@@ -101,44 +107,74 @@ class LoginScreen(Screen):
             self.dialog.text = message  # Cập nhật nội dung nếu dialog đã tồn tại
 
         self.dialog.open()
+
     def check_internet(self):
-        """Kiểm tra kết nối Internet trước khi cho phép đăng nhập"""
-        url = "http://www.google.com"  # URL kiểm tra mạng
+        """Kiểm tra kết nối Internet bằng cách gửi yêu cầu ping tới một trang web đáng tin cậy."""
+        try:
+            requests.get("https://www.google.com", timeout=5)  # Test kết nối với Google
+            return True  # Có mạng
+        except requests.exceptions.RequestException:
+            return False  # Không có mạng
 
 
+class MyApp(MDApp):
+        def build(self):
+            return Builder.load_file("home.kv")  # Load file .kv
 
-        def error_callback(req, error):
-            # Nếu không có mạng, hiển thị thông báo lỗi
+        def change_tab_color(self, tab):
+            """Hàm đổi màu khi bấm vào tab"""
+            tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
+            tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
+            tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu icon
+
+        def check_internet(self):
+            """Check if the device is connected to the internet."""
+            try:
+                # Test accessing a reliable site
+                response = requests.get('https://www.google.com', timeout=5)
+                if response.status_code == 200:
+                    return True  # Internet is available
+            except requests.exceptions.ConnectionError:
+                pass
+            except requests.exceptions.Timeout:
+                pass
+            # No internet connection
             self.show_no_internet_dialog()
-            self.manager.current = "home"
-        # Kiểm tra kết nối (timeout 3 giây)
-        UrlRequest(url, on_error=error_callback, timeout=3)
+            return False
 
-    def show_no_internet_dialog(self):
-        """Hiển thị dialog khi không có kết nối mạng"""
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Lỗi kết nối",
-                text="Không có kết nối Internet. Vui lòng kiểm tra lại WiFi hoặc dữ liệu di động!",
-                buttons=[
-                    MDRaisedButton(text="OK", on_release=lambda x: self.dialog.dismiss())
-                ]
-            )
-        self.dialog.open()
+        def show_no_internet_dialog(self):
+            """Display a dialog if there is no internet connection."""
+            if not hasattr(self, 'dialog'):
+                print("Creating no internet connection dialog...")
+                self.dialog = self.create_dialog(
+                    title="No Internet Connection",
+                    message="Please check your network and try again.",
+                    buttons=["OK"]
+                )
+            self.dialog.open()
 
-    def goto_signup(self):
-        self.manager.current = "signup"
+        def create_dialog(self, title, message, buttons):
+            # Placeholder for dialog creation logic
+            print(f"Dialog: {title}\n{message}\nButtons: {buttons}")
+            return self  # Return a mock dialog object for demonstration purposes
 
-    def show_popup(self, title, message):
-        if not self.popup:
-            close_button = MDFlatButton(text="Close", on_release=self.close_popup)
-            self.popup = MDDialog(title=title, text=message, buttons=[close_button])
-        self.popup.open()
+        def open(self):
+            # Mock success method for dialog
+            print("Internet connection error dialog displayed.")
 
-    def close_popup(self, *args):
-        if self.popup:
-            self.popup.dismiss(force=True)
-            self.popup = None
+        def goto_signup(self):
+            self.manager.current = "signup"
+
+        def show_popup(self, title, message):
+            if not self.popup:
+                close_button = MDFlatButton(text="Close", on_release=self.close_popup)
+                self.popup = MDDialog(title=title, text=message, buttons=[close_button])
+            self.popup.open()
+
+        def close_popup(self, *args):
+            if self.popup:
+                self.popup.dismiss(force=True)
+                self.popup = None
 
 
 class SignUpScreen(Screen):
@@ -199,6 +235,14 @@ class HomeScreen(Screen):
         # Hiệu ứng fade-in khi thêm thẻ
         anim = Animation(opacity=1, duration=0.5)
         anim.start(card)
+        def build(self):
+            return Builder.load_file("home.kv")  # Load file .kv
+
+        def change_tab_color(self, tab):
+            """Hàm đổi màu khi bấm vào tab"""
+            tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
+            tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
+            tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu icon
 
 class ProfileScreen(Screen):
     pass
@@ -218,8 +262,8 @@ class MainApp(MDApp):
         sm.add_widget(SettingsScreen(name="settings"))
         return sm
 
-   # def on_start(self):
-    #    self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
+    def on_start(self):
+        self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
     def on_start(self):
         self.root.current = "welcome"
 
@@ -254,16 +298,6 @@ class MainApp(MDApp):
         anim.bind(on_complete=lambda *_: setattr(self.root, "current", "welcome"))
         anim.start(image1)
         anim.start(image2)
-
-class MyApp(MDApp):
-    def build(self):
-        return Builder.load_file("home.kv")  # Load file .kv
-
-    def change_tab_color(self, tab):
-        """Hàm đổi màu khi bấm vào tab"""
-        tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
-        tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
-        tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu icon
 
 if __name__ == "__main__":
     MainApp().run()
