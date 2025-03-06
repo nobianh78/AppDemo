@@ -144,7 +144,7 @@ class LoginScreen(Screen):
         def error_callback(req, error):
             # Nếu không có mạng, hiển thị thông báo lỗi
             self.show_no_internet_dialog()
-            self.manager.current = "home"
+            self.manager.current = "login"
         # Kiểm tra kết nối (timeout 3 giây)
         UrlRequest(url, on_error=error_callback, timeout=3)
 
@@ -154,9 +154,11 @@ class LoginScreen(Screen):
             self.dialog = MDDialog(
                 title="Lỗi kết nối",
                 text="Không có kết nối Internet. Vui lòng kiểm tra lại WiFi hoặc dữ liệu di động!",
+
                 buttons=[
                     MDRaisedButton(text="OK", on_release=lambda x: self.dialog.dismiss())
                 ]
+
             )
         self.dialog.open()
 
@@ -176,6 +178,28 @@ class LoginScreen(Screen):
 
 
 class SignUpScreen(Screen):
+    class SignUpScreen(Screen):
+        def on_pre_enter(self, *args):
+            """Cập nhật giao diện khi vào màn hình"""
+            self.update_language()
+
+        def update_language(self):
+            """Cập nhật ngôn ngữ dựa trên trạng thái của ứng dụng"""
+            app = MDApp.get_running_app()
+            if app.language == "Tiếng Việt":
+                self.ids.welcome_label.text = "XIN CHÀO!"
+                self.ids.create_label.text = "Tạo tài khoản mới"
+                self.ids.email.hint_text = "Email"
+                self.ids.password.hint_text = "Mật khẩu"
+                self.ids.re_password.hint_text = "Nhập lại mật khẩu"
+                self.ids.login_button.text = "ĐĂNG NHẬP"
+            else:
+                self.ids.welcome_label.text = "HELLO!"
+                self.ids.create_label.text = "Create a new account"
+                self.ids.email.hint_text = "Email"
+                self.ids.password.hint_text = "Password"
+                self.ids.re_password.hint_text = "Re - Password"
+                self.ids.login_button.text = "LOGIN"
 
     def register_user(self):
         email = self.ids.email.text.strip()
@@ -250,12 +274,18 @@ class MainApp(MDApp):
         sm.add_widget(HomeScreen(name="home"))
         sm.add_widget(ProfileScreen(name="profile"))
         sm.add_widget(SettingsScreen(name="settings"))
+        self.theme_cls.primary_palette = "Purple"  # Chọn bảng màu tím
+        self.theme_cls.primary_hue = "300"  # Chọn sắc độ tím nhẹ
         return sm
-
-   # def on_start(self):
-    #    self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
+    def change_tab_color(self, tab):
+        """Hàm đổi màu khi bấm vào tab"""
+        tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
+        tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
+        tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu ico
     def on_start(self):
-        self.root.current = "welcome"
+        self.blink_image(3)  # Ảnh 1 nhấp nháy 3 lần, ảnh 2 vẫn giữ nguyên
+   # def on_start(self):
+    #    self.root.current = "welcome"
 
     def fade_in_image(self):
         """Hiệu ứng xuất hiện mượt mà trước khi nhấp nháy"""
@@ -286,18 +316,16 @@ class MainApp(MDApp):
 
         anim = Animation(opacity=0, duration=1.5)  # Cả 2 ảnh mờ dần cùng lúc
         anim.bind(on_complete=lambda *_: setattr(self.root, "current", "welcome"))
-        anim.start(image1)
+        anim.start(image1)  # Corrected: 'start' instead of 'starat'
         anim.start(image2)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.language = "English"  # Mặc định tiếng Anh
 class MyApp(MDApp):
     def build(self):
         return Builder.load_file("home.kv")  # Load file .kv
 
-    def change_tab_color(self, tab):
-        """Hàm đổi màu khi bấm vào tab"""
-        tab.theme_text_color = "Custom"  # Cho phép thay đổi màu chữ
-        tab.text_color = (0.7, 0.5, 1, 1)  # Màu tím pastel
-        tab.icon_color = (0.7, 0.5, 1, 1)  # ✅ Đổi cả màu icon
 
 if __name__ == "__main__":
     MainApp().run()

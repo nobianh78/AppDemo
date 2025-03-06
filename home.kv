@@ -1,99 +1,67 @@
 <HomeScreen>:
     id: home_screen
     name: "home"
-    Screen:
-
-    MDBottomNavigation:
-        id: bottom_navigation
-        panel_color: 1, 1, 1, 1  # Màu nền của thanh navigation
-
-
-        MDBottomNavigationItem:
-            id: home_tab
-            name: "home"
-            text: "Trang chủ"
-            icon: "home"
-            theme_text_color: "Custom"  # ✅ Cho phép đổi màu
-            on_tab_release: app.toggle_tab_color(self)  # Gọi hàm khi click vào tab
-
-
-
-        MDBottomNavigationItem:
-            id: profile_tab
-            name: "profile"
-            text: "Cá nhân"
-            icon: "account"
-            theme_text_color: "Custom"  # ✅ Cho phép đổi màu
-            on_tab_release: app.toggle_tab_color(self)  # Gọi hàm khi click vào tab
-
-
-
-        MDBottomNavigationItem:
-            id: messages_tab
-            name: "messages"
-            text: "Tin nhắn"
-            icon: "message"
-            theme_text_color: "Custom"  # ✅ Cho phép đổi màu
-            on_tab_release: app.toggle_tab_color(self)  # Gọi hàm khi click vào tab
-
-        MDBottomNavigationItem:
-            id: friends_tab
-            name: "friends"
-            text: "Bạn bè"
-            icon: "account-group"
-            theme_text_color: "Custom"  # ✅ Cho phép đổi màu
-            on_tab_release: app.toggle_tab_color(self)  # Gọi hàm khi click vào tab
-
-
-    MDScreen:
-
 
     BoxLayout:
         orientation: "vertical"
 
-        MDTopAppBar:
-            title: "Home"
-            font_size: "16sp"  # 🔹 Chữ vừa phải
-            elevation: 4
-            specific_text_color: 1, 1, 1, 1  # 🔹 Chữ trắng
-            md_bg_color: 0.7, 0.5, 1, 1  # 🔹 Màu tím pastel đậm hơn
-            size_hint_y: None
-            height: dp(200)  # 🔹 Tăng chiều cao thanh tiêu đề
+        ScreenManager:
+            id: main_screen_manager  # Giữ các màn hình con mà không làm mất thanh điều hướng
 
-        BoxLayout:
-            size_hint_y: None
-            height: dp(80)  # 🔹 Tăng chiều cao khu vực tìm kiếm
-            padding: dp(15)
-            spacing: dp(15)
+            Screen:
+                name: "home_content"
+                MDLabel:
+                    text: "Nội dung trang Home"
+                    halign: "center"
 
-            MDTextField:
-                id: search_field
-                hint_text: "Tìm kiếm..."
-                mode: "rectangle"
-                size_hint_x: 0.75
-                height: dp(55)  # 🔹 Ô nhập cao hơn
-                font_size: "16sp"
-                line_color_normal: 0.7, 0.5, 1, 1  # 🔹 Viền tím pastel
-                text_color: 0.4, 0.2, 0.8, 1  # 🔹 Chữ tím đậm hơn
-                pos_hint: {"center_y": 0.5}
+            Screen:
+                name: "profile_content"
+                MDLabel:
+                    text: "Nội dung trang Cá Nhân"
+                    halign: "center"
 
-            MDFillRoundFlatIconButton:
-                text: "Tìm"
-                icon: "magnify"  # 🔍 Kính lúp
-                font_size: "18sp"
-                size_hint_x: None
-                size: dp(120), dp(55)  # 🔹 Nút cân đối với ô nhập
-                md_bg_color: 0.8, 0.6, 1, 1  # 🔹 Nút màu tím pastel
-                text_color: 1, 1, 1, 1  # 🔹 Chữ trắng
-                icon_color: 1, 1, 1, 1  # 🔍 Kính lúp trắng
-                pos_hint: {"center_y": 0.5}
-                on_release: app.search_function(search_field.text)
+            Screen:
+                name: "messages_content"
+                MDLabel:
+                    text: "Nội dung trang Tin Nhắn"
+                    halign: "center"
 
-        MDLabel:
-            text: "Nội dung trang Home"
-            halign: "center"
-            font_size: "18sp"
-            theme_text_color: "Custom"
-            text_color: 0.5, 0.3, 1, 1  # 🔹 Chữ tím pastel đậm hơn
+            Screen:
+                name: "friends_content"
+                MDLabel:
+                    text: "Nội dung trang Bạn Bè"
+                    halign: "center"
 
 
+        MDBottomNavigation:
+            id: bottom_navigation
+            panel_color: 1, 1, 1, 1
+
+            MDBottomNavigationItem:
+                id: home_tab
+                name: "home"
+                text: "Trang chủ"
+                icon: "home"
+                on_tab_release: root.ids.main_screen_manager.current = "home_content"
+                text_color_active: 186/255, 154/255, 219/255, 1
+            MDBottomNavigationItem:
+                id: profile_tab
+                name: "profile"
+                text: "Cá nhân"
+                icon: "account"
+                on_tab_release: root.ids.main_screen_manager.current = "profile_content"
+                text_color_active: 186/255, 154/255, 219/255, 1
+            MDBottomNavigationItem:
+                id: messages_tab
+                name: "messages"
+                text: "Tin nhắn"
+                icon: "message"
+                on_tab_release: root.ids.main_screen_manager.current = "messages_content"
+                text_color_active: 186/255, 154/255, 219/255, 1
+            MDBottomNavigationItem:
+                id: friends_tab
+                name: "friends"
+                text: "Bạn bè"
+                icon: "account-group"
+                on_tab_release: root.ids.main_screen_manager.current = "friends_content"
+                text_color_active: 186/255, 154/255, 219/255, 1
