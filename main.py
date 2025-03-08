@@ -176,7 +176,7 @@ class LoginScreen(Screen):
             self.popup.dismiss(force=True)
             self.popup = None
 
-
+import requests
 class SignUpScreen(Screen):
     class SignUpScreen(Screen):
         def on_pre_enter(self, *args):
@@ -231,6 +231,39 @@ class SignUpScreen(Screen):
         dialog = MDDialog(title=title, text=message,
                           buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())])
         dialog.open()
+
+    def verify_email(email):
+        # Link API của Verify-email.org (thay bằng URL chính thức của dịch vụ)
+        api_url = "https://app.verify-email.org/api/v1/{your_api_key}/verify"
+
+        # API Key (bạn cần thay "your_api_key" bằng mã API thật của mình)
+        api_key = "your_api_key_here"
+
+        # Endpoint với email được nối vào URL
+        endpoint = f"{api_url}?email={email}"
+
+        try:
+            # Gửi yêu cầu GET đến API
+            response = requests.get(endpoint)
+            # Parse dữ liệu JSON trả về từ API
+            result = response.json()
+
+            # Kiểm tra kết quả
+            if result.get("status") == 1:  # "1" thường biểu thị email hợp lệ với API này
+                print(f"Email '{email}' là hợp lệ.")
+                return True
+            else:
+                print(f"Email '{email}' không hợp lệ hoặc không tồn tại.")
+                return False
+        except Exception as e:
+            print(f"Có lỗi xảy ra: {e}")
+            return False
+
+    # Ví dụ sử dụng hàm
+    email_to_check = "example@gmail.com"
+    verify_email(email_to_check)
+
+
 class HomeScreen(Screen):
     def add_team_card(self, team_name):
         """Thêm một thẻ đội nhóm vào màn hình với hiệu ứng fade-in."""
