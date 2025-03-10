@@ -13,64 +13,36 @@ import sqlite3
 import re
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivymd.uix.label import MDLabel
+from connect_sql import DatabaseSQLServer
+from dangnhap import register, login
 # Load các file KV
-Builder.load_file("myapp.kv")
-Builder.load_file("login.kv")
-Builder.load_file("signup.kv")
-Builder.load_file("home.kv")
-Builder.load_file("profile.kv")
-Builder.load_file("welcome.kv")
+Builder.load_file("presentation/myapp.kv")
+Builder.load_file("presentation/login.kv")
+Builder.load_file("presentation/signup.kv")
+Builder.load_file("presentation/home.kv")
+Builder.load_file("presentation/profile.kv")
+Builder.load_file("presentation/welcome.kv")
 import sqlite3
 
 import sqlite3
 
 class Database:
     def __init__(self):
-        """Kết nối đến database SQLite"""
-        self.conn = sqlite3.connect("users.db")  # Kết nối hoặc tạo database nếu chưa có
-        self.cursor = self.conn.cursor()
-        self.create_table()
-
-    def create_table(self):
-        """Tạo bảng users nếu chưa tồn tại"""
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                email TEXT UNIQUE NOT NULL,
-                                password TEXT NOT NULL
-                              )''')
-        self.conn.commit()
+        """Kết nối đến database SQL Server"""
+        self.db = DatabaseSQLServer()
 
     def insert_user(self, email, password):
         """Thêm người dùng mới vào database"""
-        try:
-            self.cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, password))
-            self.conn.commit()
-            return True
-        except sqlite3.IntegrityError:
-            return False  # Trả về False nếu email đã tồn tại
+        return self.db.insert_user(email, password)
 
     def check_user(self, email, password):
         """Kiểm tra email & mật khẩu có đúng không"""
-        self.cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
-        return self.cursor.fetchone() is not None  # Trả về True nếu tìm thấy user
+        return self.db.get_user_password(email) == password
 
     def close(self):
         """Đóng kết nối database"""
-        self.conn.close()
+        self.db.conn.close()
 
-def create_database():
-    #tao mot database va bang uses de luu tru
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        email TEXT UNIQUE NOT NULL,
-                        password TEXT NOT NULL
-                      )''')
-    conn.commit()
-    conn.close()
-
-create_database()
 class MainScreen(Screen):
     pass
 
@@ -109,16 +81,11 @@ class LoginScreen(Screen):
         email = self.ids.email.text.strip()
         password = self.ids.password.text.strip()
 
-        # Sử dụng class Database để kiểm tra thông tin đăng nhập
-        db = Database()  # Kết nối tới Database
-        cursor = db.cursor
-
-        cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
-        user = cursor.fetchone()
-        db.close()  # Đóng kết nối Database
+        # Sử dụng hàm login từ dangnhap.py để kiểm tra thông tin đăng nhập
+        result = login(email, password)
 
         # Kiểm tra kết quả trả về
-        if not user:
+        if "thành công" not in result:
             self.show_popup("Lỗi", "Sai email hoặc mật khẩu!")  # Hiển thị lỗi
             return  # Không chuyển màn hình nếu thông tin sai
 
@@ -202,35 +169,31 @@ class SignUpScreen(Screen):
                 self.ids.login_button.text = "LOGIN"
 
     def register_user(self):
+        username = self.ids.username.text.strip()
         email = self.ids.email.text.strip()
         password = self.ids.password.text.strip()
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            self.ids.error_label.text = "Email không hợp lệ!"
-            return
-        if len(password) < 8:
-            self.ids.error_label.text = "Mật khẩu phải có ít nhất 8 ký tự!"
-            return
-        if not email or not password:
-            self.show_popup("Error", "Please enter all fields!")
-            return
-        self.ids.error_label.text = ""
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
 
-        try:
-            cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, password))
-            conn.commit()
-            self.show_popup("Success", "Account created successfully!")
-            self.manager.current = "login"  # Chuyển sang màn hình đăng nhập
-        except sqlite3.IntegrityError:
-            self.show_popup("Error", "Email already exists!")
-        finally:
-            conn.close()
+        if not username or not email or not password:
+            self.ids.error_label.text = "❌ Username, Email và Password không được để trống!"
+            return
 
-    def show_popup(self, title, message):
+        # Sử dụng hàm register từ dangnhap.py để đăng ký người dùng mới
+        result = register(username, email, password)
+
+        if "thành công" in result:
+            self.show_popup("Success", "Account created successfully!", success=True)
+        else:
+            self.show_popup("Error", result, success=False)
+
+    def show_popup(self, title, message, success):
         dialog = MDDialog(title=title, text=message,
-                          buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())])
+                          buttons=[MDFlatButton(text="OK", on_release=lambda x: self.close_popup(dialog, success))])
         dialog.open()
+
+    def close_popup(self, dialog, success):
+        dialog.dismiss()
+        if success:
+            self.manager.current = "login"
 
     def verify_email(email):
         # Link API của Verify-email.org (thay bằng URL chính thức của dịch vụ)
